@@ -33,7 +33,7 @@ public class EcommerceApplication {
             userService.saveRole(new Role(null,"ROLE_ADMIN"));
 
 
-            userService.saveUser(new Users(null,"simone","lopez","simonelopez@hotmail.it","3517204474","viagBruno5","ryumille12","img1.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"simone","lopez","simonelopez@hotmail.it","3517204474","viagBruno5","asd","img1.png",new ArrayList<>(),new ArrayList<>()));
             userService.saveUser(new Users(null,"simo","lop","simolop@hotmail.it","mannaiaal numero","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
             userService.saveUser(new Users(null,"simo","lop","email1","numero1","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
             userService.saveUser(new Users(null,"simo","lop","email2","numero2","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
