@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -94,6 +95,17 @@ public class UserController {
         }
         else{
             throw new RuntimeException("Refresh token is missing");
+        }
+
+    }
+
+    @PostMapping("/addToCart")
+    public ResponseEntity addToCart(HttpServletRequest request,@RequestParam String productName){
+        try{
+            String email=tokenGetEmail(request);
+            return new ResponseEntity(userService.addToCart(email,productName), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity( HttpStatus.BAD_REQUEST);
         }
 
     }

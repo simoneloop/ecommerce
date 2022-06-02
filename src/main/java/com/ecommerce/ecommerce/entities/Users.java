@@ -36,14 +36,16 @@ public class Users {
     private String phoneNumber;
 
 
-    @Column(name="address",nullable = true,unique = true)
+    @Column(name="address",nullable = true)
     private String address;
-    @Column(name="password",nullable = false,unique = true)
+    @Column(name="password",nullable = false)
     private String password;
-    @Column(name="url_propic",nullable = true,unique = true)
+    @Column(name="url_propic",nullable = true)
     private String urlPropic;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany()
     private Collection<Role> roles=new ArrayList<>();
 
+    @ManyToMany()
+    private Collection<Product> shoppingCart=new ArrayList<>();
 }

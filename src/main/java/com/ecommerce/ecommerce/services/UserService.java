@@ -1,7 +1,9 @@
 package com.ecommerce.ecommerce.services;
 
+import com.ecommerce.ecommerce.entities.Product;
 import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.entities.Users;
+import com.ecommerce.ecommerce.repositories.ProductRepository;
 import com.ecommerce.ecommerce.repositories.RoleRepository;
 import com.ecommerce.ecommerce.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,33 +33,18 @@ import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
 public class UserService implements UserDetailsService {
+
     @Autowired
     private final UserRepository userRepository;
 
     @Autowired
     private final RoleRepository roleRepository;
 
+    @Autowired
+    private final ProductRepository productRepository;
+
     private final PasswordEncoder passwordEncoder;
 
-
-    //di autenticazione, lasciare così
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Users user=userRepository.findByEmail(email);
-        if(user==null){
-            log.error("USER NOT FOUND in database");
-            throw new UsernameNotFoundException("USER NOT FOUND in database");
-        }
-        else{
-            log.info("USER {} FOUND in database",email);
-        }
-        Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
-        user.getRoles().forEach(
-                role-> {
-                    authorities.add(new SimpleGrantedAuthority(role.getName()));
-                });
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
-    }
 
 
     public Users saveUser(Users user) throws Exception {
@@ -90,6 +77,34 @@ public class UserService implements UserDetailsService {
     public List<Users> getUsers(){
         log.info("Fetching all users");
         return userRepository.findAll();
+    }
+
+    public Collection<Product> addToCart(String email,String nameProduct){
+        Product prod=productRepository.findByName(nameProduct);
+        Users user=userRepository.findByEmail(email);
+        user.getShoppingCart().add(prod);
+        return user.getShoppingCart();
+    }
+
+
+
+    //di autenticazione, lasciare così
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Users user=userRepository.findByEmail(email);
+        if(user==null){
+            log.error("USER NOT FOUND in database");
+            throw new UsernameNotFoundException("USER NOT FOUND in database");
+        }
+        else{
+            log.info("USER {} FOUND in database",email);
+        }
+        Collection<SimpleGrantedAuthority> authorities=new ArrayList<>();
+        user.getRoles().forEach(
+                role-> {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                });
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 
 
