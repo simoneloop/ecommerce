@@ -36,11 +36,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/users/add","/users/refreshToken").permitAll();
         http.authorizeRequests().antMatchers("/users/addToCart").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers("/products/getProductPageable").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/products/buy").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/products/getProductPageable").hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers(HttpMethod.POST,"/products/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/products/getAll").hasAnyAuthority("ROLE_ADMIN");
+        http.authorizeRequests().antMatchers("/products/**").hasAnyAuthority("ROLE_ADMIN");
 
         /*http.authorizeRequests().antMatchers(HttpMethod.GET,"/users/**").hasAnyAuthority("ROLE_ADMIN");*/
         http.authorizeRequests().anyRequest().authenticated();

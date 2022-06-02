@@ -35,20 +35,24 @@ public class EcommerceApplication {
 
             userService.saveUser(new Users(null,"simone","lopez","simonelopez@hotmail.it","3517204474","viagBruno5","ryumille12","img1.png",new ArrayList<>(),new ArrayList<>()));
             userService.saveUser(new Users(null,"simo","lop","simolop@hotmail.it","mannaiaal numero","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"simo","lop","email1","numero1","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"simo","lop","email2","numero2","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"simo","lop","email3","numero3","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
+
 
             userService.addRoleToUser("simonelopez@hotmail.it","ROLE_ADMIN");
             userService.addRoleToUser("simolop@hotmail.it","ROLE_USER");
 
 
-            productService.addProduct(new Product(null,"collana gioiosa","una gioiosa collana",2,(float)3,"collana",null));
-            productService.addProduct(new Product(null,"collana sfarzosa","una sfarzosa collana",4,(float)4,"collana",null));
-            productService.addProduct(new Product(null,"collana graziosa","una graziosa collana",15,(float)5,"collana",null));
-            productService.addProduct(new Product(null,"bracciale gioioso","un gioioso bracciale",21,(float)3.5,"bracciale",null));
-            productService.addProduct(new Product(null,"bracciale sfarzoso","uno sfarzoso bracciale",21,(float)4.5,"bracciale",null));
-            productService.addProduct(new Product(null,"bracciale grazioso","un grazioso bracciale",21,(float)5.5,"bracciale",null));
-            productService.addProduct(new Product(null,"orecchino gioioso","un gioioso orecchino",21,(float)3.6,"orecchino",null));
-            productService.addProduct(new Product(null,"orecchino sfarzoso","uno sfarzoso orecchino",21,(float)4.6,"orecchino",null));
-            productService.addProduct(new Product(null,"orecchino grazioso","un grazioso orecchino",21,(float)5.6,"orecchino",null));
+            productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana",null,null));
+            productService.addProduct(new Product(null,"collanasfarzosa","una sfarzosa collana",4,(float)4,"collana",null,null));
+            productService.addProduct(new Product(null,"collanagraziosa","una graziosa collana",15,(float)5,"collana",null,null));
+            productService.addProduct(new Product(null,"bracciale gioioso","un gioioso bracciale",21,(float)3.5,"bracciale",null,null));
+            productService.addProduct(new Product(null,"bracciale sfarzoso","uno sfarzoso bracciale",21,(float)4.5,"bracciale",null,null));
+            productService.addProduct(new Product(null,"bracciale grazioso","un grazioso bracciale",21,(float)5.5,"bracciale",null,null));
+            productService.addProduct(new Product(null,"orecchino gioioso","un gioioso orecchino",21,(float)3.6,"orecchino",null,null));
+            productService.addProduct(new Product(null,"orecchino sfarzoso","uno sfarzoso orecchino",21,(float)4.6,"orecchino",null,null));
+            productService.addProduct(new Product(null,"orecchino grazioso","un grazioso orecchino",21,(float)5.6,"orecchino",null,null));
 
         };
     }

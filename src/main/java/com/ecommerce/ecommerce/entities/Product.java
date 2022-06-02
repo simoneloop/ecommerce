@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,6 +39,14 @@ public class Product {
 
     @Column(name="url_propic",nullable = true)
     private String urlPropic;
+
+    @Version
+    //valore modificato ogni modifica dell'entità,
+    // prende il valore all'inizio della transazione e lo confronta con quello alla fine se i due non combaciano chiama una
+    //ObjectOptimisticLockingFailureException che essendo una RuntimeException triggera il rollback in ambienti transazionali
+    @Column(name = "version", nullable = false)
+    @JsonIgnore
+    private Long version;
 
 
 }

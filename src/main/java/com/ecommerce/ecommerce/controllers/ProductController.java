@@ -8,7 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+
+import static com.ecommerce.ecommerce.UTI.Support.tokenGetEmail;
 
 @RestController
 @RequestMapping("/products")
@@ -63,5 +68,17 @@ public class ProductController {
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping("/buy")
+    public ResponseEntity buyProduct(HttpServletRequest request, @RequestParam String productName, @RequestParam String quantity){
+        try{
+            String email=tokenGetEmail(request);
+            productService.buyProduct(email,productName,quantity);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
     }
 }

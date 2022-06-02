@@ -5,15 +5,18 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.ecommerce.ecommerce.UTI.exception.InsufficientAmountException;
 import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.entities.Users;
 
 import com.ecommerce.ecommerce.services.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.html.HTMLTableRowElement;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -23,8 +26,29 @@ import java.util.stream.Collectors;
 import static com.ecommerce.ecommerce.UTI.Consts.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
+
 @Service
 public class Support {
+
+
+    private static Map<String,Double>paymentMap=new HashMap<>();
+
+    static {
+        paymentMap.put("simolop@hotmail.it",20.0);
+        paymentMap.put("email1",12.0);
+        paymentMap.put("email2",100.0);
+        paymentMap.put("email3",1.0);
+    }
+
+    public static boolean validateCreditLimit(String email,double paidAmount) throws Exception {
+        if(paidAmount>paymentMap.get(email)){
+            throw new InsufficientAmountException();
+        }
+        else{
+            return true;
+        }
+    }
+
 
     public static Map<String, String> createTokens(User user, HttpServletRequest request) {
         Algorithm algorithm = Algorithm.HMAC256(ALGHORITM_SECRET.getBytes());
