@@ -15,5 +15,6 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Product findByName(String name);
     Collection<Product> findByTypo(String typo);
     Page<Product>findByTypo(String typo, PageRequest pageable);
+    Collection<Product> findByHot(Boolean isHot);
 
 }

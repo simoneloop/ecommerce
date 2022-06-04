@@ -27,20 +27,20 @@ import static com.ecommerce.ecommerce.UTI.Consts.*;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 
 
-@Service
+@UtilityClass
 public class Support {
 
 
-    private static Map<String,Double>paymentMap=new HashMap<>();
+    private Map<String,Double>paymentMap=new HashMap<>();
 
     static {
-        paymentMap.put("simolop@hotmail.it",20.0);
+        paymentMap.put("user",20.0);
         paymentMap.put("email1",12.0);
         paymentMap.put("email2",100.0);
         paymentMap.put("email3",1.0);
     }
 
-    public static boolean validateCreditLimit(String email,double paidAmount) throws Exception {
+    public boolean validateCreditLimit(String email,double paidAmount) throws Exception {
         if(paidAmount>paymentMap.get(email)){
             throw new InsufficientAmountException();
         }
@@ -50,7 +50,7 @@ public class Support {
     }
 
 
-    public static Map<String, String> createTokens(User user, HttpServletRequest request) {
+    public Map<String, String> createTokens(User user, HttpServletRequest request) {
         Algorithm algorithm = Algorithm.HMAC256(ALGHORITM_SECRET.getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
@@ -69,7 +69,7 @@ public class Support {
         return res;
     }
 
-    public static Map<String, String> createTokens(Users user, HttpServletRequest request) {
+    public Map<String, String> createTokens(Users user, HttpServletRequest request) {
         Algorithm algorithm = Algorithm.HMAC256(ALGHORITM_SECRET.getBytes());
         String access_token = JWT.create()
                 .withSubject(user.getEmail())
@@ -88,11 +88,11 @@ public class Support {
         return res;
     }
 
-    public static Algorithm defineAlgorith() {
+    public Algorithm defineAlgorith() {
         return Algorithm.HMAC256(ALGHORITM_SECRET.getBytes());
     }
 
-    public static String tokenGetEmail(HttpServletRequest request) {
+    public String tokenGetEmail(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
@@ -110,5 +110,8 @@ public class Support {
         else{
             return null;
         }
+    }
+    public String getExceptionName(Exception e){
+        return e.getClass().getSimpleName();
     }
 }

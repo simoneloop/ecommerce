@@ -48,5 +48,8 @@ public class Product {
     @JsonIgnore
     private Long version;
 
+    @Column(name="hot",nullable = false)
+    private boolean hot;
+
 
 }

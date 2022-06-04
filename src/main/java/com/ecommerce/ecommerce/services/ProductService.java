@@ -1,7 +1,9 @@
 package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.UTI.Support;
+import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
 import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
+import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
 import com.ecommerce.ecommerce.entities.Product;
 import com.ecommerce.ecommerce.entities.Purchase;
 import com.ecommerce.ecommerce.entities.Users;
@@ -82,6 +84,9 @@ public class ProductService {
     public void buyProduct(String email,String productName,String quantity) throws Exception {
         int qty=Integer.parseInt(quantity);
         Product p= productRepository.findByName(productName);
+        if(p==null){
+            throw new ProductDoesNotExistException();
+        }
         float amountToPay=p.getQuantity()*p.getPrice();
         int newQuantity=p.getQuantity()-Integer.parseInt(quantity);
 
@@ -89,10 +94,17 @@ public class ProductService {
             throw new QuantityProductUnavailableException();
         }
         Users user=userRepository.findByEmail(email);
+        if(user==null){
+            throw new UserDoesNotExistException();
+        }
         Purchase purchase=new Purchase(null,null,user,p,qty);
         purchaseRepository.save(purchase);
         Support.validateCreditLimit(email,amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
         p.setQuantity(newQuantity);
         productRepository.flush();
+    }
+
+    public Collection<Product> getAllHotProducts(boolean isHot){
+        return productRepository.findByHot(isHot);
     }
 }

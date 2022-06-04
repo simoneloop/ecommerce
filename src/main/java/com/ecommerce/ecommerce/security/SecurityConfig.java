@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/users/add","/users/refreshToken").permitAll();
         http.authorizeRequests().antMatchers("/users/addToCart").hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers("/products/buy").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/products/getHotProduct").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/products/getProductPageable").hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN");

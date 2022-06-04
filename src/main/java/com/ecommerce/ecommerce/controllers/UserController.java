@@ -36,7 +36,7 @@ import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static com.ecommerce.ecommerce.UTI.Consts.*;
-import static com.ecommerce.ecommerce.UTI.Support.*;
+import com.ecommerce.ecommerce.UTI.Support;
 
 
 
@@ -73,7 +73,7 @@ public class UserController {
         if( authorizationHeader !=null && authorizationHeader.startsWith("Bearer ")){
             try{
                 String refresh_token = authorizationHeader.substring("Bearer ".length());//giusto rimuovo "Bearer" dal token
-                Algorithm algorithm=defineAlgorith();//TODO refactor
+                Algorithm algorithm=Support.defineAlgorith();//TODO refactor
                 JWTVerifier verifier= JWT.require(algorithm).build();
                 DecodedJWT decodedJWT=verifier.verify(refresh_token);
                 String email=decodedJWT.getSubject();
@@ -102,10 +102,10 @@ public class UserController {
     @PostMapping("/addToCart")
     public ResponseEntity addToCart(HttpServletRequest request,@RequestParam String productName){
         try{
-            String email=tokenGetEmail(request);
+            String email=Support.tokenGetEmail(request);
             return new ResponseEntity(userService.addToCart(email,productName), HttpStatus.OK);
         } catch (Exception exception) {
-            return new ResponseEntity( HttpStatus.BAD_REQUEST);
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
 
     }
