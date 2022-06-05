@@ -6,8 +6,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ecommerce.ecommerce.UTI.Support;
-import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.entities.Users;
+import com.ecommerce.ecommerce.entities.UsersDTO;
 import com.ecommerce.ecommerce.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -17,12 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,14 +24,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
-import static com.ecommerce.ecommerce.UTI.Consts.*;
-import com.ecommerce.ecommerce.UTI.Support;
-
 
 
 @RestController
@@ -110,6 +100,17 @@ public class UserController {
 
     }
 
+    @PostMapping("/removeFromCart")
+    public ResponseEntity removeFromCart(HttpServletRequest request,@RequestParam String productName){
+        try{
+            String email=Support.tokenGetEmail(request);
+            return new ResponseEntity(userService.removeFromCart(email,productName), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
     @GetMapping("/getUserCart")
     public ResponseEntity getUserCart(HttpServletRequest request){
         try{
@@ -122,7 +123,27 @@ public class UserController {
 
     }
 
+    @PostMapping("/modifyMyDetails")
+    public ResponseEntity modifyMyDetails(HttpServletRequest request,@RequestBody UsersDTO details){
+        try{
+            String email=Support.tokenGetEmail(request);
+            return new ResponseEntity(userService.modifyMyDetails(email,details),HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+    }
 
+    @GetMapping("/getMyDetails")
+    public ResponseEntity getMyDetails(HttpServletRequest request){
+        try{
+            String email=Support.tokenGetEmail(request);
+            return new ResponseEntity(userService.getMyDetails(email),HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+    }
 
 
 }

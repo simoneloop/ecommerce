@@ -4,10 +4,9 @@ import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
 import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
 import com.ecommerce.ecommerce.UTI.exception.UserAlreadyExistException;
 import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
-import com.ecommerce.ecommerce.entities.Product;
-import com.ecommerce.ecommerce.entities.ProductInPurchase;
-import com.ecommerce.ecommerce.entities.Role;
-import com.ecommerce.ecommerce.entities.Users;
+import com.ecommerce.ecommerce.controllers.UserController;
+import com.ecommerce.ecommerce.entities.*;
+import com.ecommerce.ecommerce.entities.UsersDTO;
 import com.ecommerce.ecommerce.repositories.ProductInPurchaseRepository;
 import com.ecommerce.ecommerce.repositories.ProductRepository;
 import com.ecommerce.ecommerce.repositories.RoleRepository;
@@ -110,6 +109,15 @@ public class UserService implements UserDetailsService {
         return user.getShoppingCart();
     }
 
+    public Collection<ProductInPurchase> removeFromCart(String email,String nameProduct){
+        Users user=userRepository.findByEmail(email);
+        Product prod=productRepository.findByName(nameProduct);
+        ProductInPurchase pip=productInPurchaseRepository.findByBuyerAndBuyed(user,prod);
+        if(pip==null)throw new ProductDoesNotExistException();
+        productInPurchaseRepository.delete(pip);
+        return user.getShoppingCart();
+    }
+
     public Collection<ProductInPurchase> getUserCart(String email){
         return userRepository.findByEmail(email).getShoppingCart();
     }
@@ -134,6 +142,26 @@ public class UserService implements UserDetailsService {
                 });
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
+
+    public UsersDTO modifyMyDetails(String email, UsersDTO details){
+        Users user=userRepository.findByEmail(email);
+        if(user==null)throw new UserDoesNotExistException();
+        user.setFirstName(details.getFirstName());
+        user.setLastName(details.getLastName());
+        user.setEmail(details.getEmail());
+        user.setPhoneNumber(details.getPhoneNumber());
+        user.setAddress(details.getAddress());
+        user.setUrlPropic(details.getUrlPropic());
+        return new UsersDTO(user);
+    }
+
+    public UsersDTO getMyDetails(String email){
+        Users user=userRepository.findByEmail(email);
+        if(user==null)throw new UserDoesNotExistException();
+        return new UsersDTO(user);
+    }
+
+
 
 
 
