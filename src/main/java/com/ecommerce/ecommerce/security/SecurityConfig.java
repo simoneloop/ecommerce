@@ -35,8 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.authorizeRequests().antMatchers("/users/add","/users/refreshToken").permitAll();
-        http.authorizeRequests().antMatchers("/users/addToCart").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers("/products/buy").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/users/addToCart","/users/getUserCart").hasAnyAuthority("ROLE_USER");
+        http.authorizeRequests().antMatchers("/products/buy","/products/buyMyCart").hasAnyAuthority("ROLE_USER");
         http.authorizeRequests().antMatchers("/products/getHotProduct").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/products/getProductPageable").hasAnyAuthority("ROLE_USER","ROLE_ADMIN");
         http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ROLE_ADMIN");

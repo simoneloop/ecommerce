@@ -42,7 +42,9 @@ public class EcommerceApplication {
 
             userService.addRoleToUser("admin","ROLE_ADMIN");
             userService.addRoleToUser("user","ROLE_USER");
-
+            userService.addRoleToUser("email1","ROLE_USER");
+            userService.addRoleToUser("email2","ROLE_USER");
+            userService.addRoleToUser("email3","ROLE_USER");
 
             productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana",null,null,true));
             productService.addProduct(new Product(null,"collanasfarzosa","una sfarzosa collana",4,(float)4,"collana",null,null,false));

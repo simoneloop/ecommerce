@@ -100,11 +100,23 @@ public class UserController {
     }
 
     @PostMapping("/addToCart")
-    public ResponseEntity addToCart(HttpServletRequest request,@RequestParam String productName){
+    public ResponseEntity addToCart(HttpServletRequest request,@RequestParam String productName,@RequestParam String quantity){
         try{
             String email=Support.tokenGetEmail(request);
-            return new ResponseEntity(userService.addToCart(email,productName), HttpStatus.OK);
+            return new ResponseEntity(userService.addToCart(email,productName,quantity), HttpStatus.OK);
         } catch (Exception exception) {
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping("/getUserCart")
+    public ResponseEntity getUserCart(HttpServletRequest request){
+        try{
+            String email=Support.tokenGetEmail(request);
+            return new ResponseEntity(userService.getUserCart(email),HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
             return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
 

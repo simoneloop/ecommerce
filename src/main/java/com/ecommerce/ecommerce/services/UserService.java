@@ -1,8 +1,14 @@
 package com.ecommerce.ecommerce.services;
 
+import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
+import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
+import com.ecommerce.ecommerce.UTI.exception.UserAlreadyExistException;
+import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
 import com.ecommerce.ecommerce.entities.Product;
+import com.ecommerce.ecommerce.entities.ProductInPurchase;
 import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.entities.Users;
+import com.ecommerce.ecommerce.repositories.ProductInPurchaseRepository;
 import com.ecommerce.ecommerce.repositories.ProductRepository;
 import com.ecommerce.ecommerce.repositories.RoleRepository;
 import com.ecommerce.ecommerce.repositories.UserRepository;
@@ -42,6 +48,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final ProductRepository productRepository;
+    @Autowired
+    private final ProductInPurchaseRepository productInPurchaseRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -53,7 +61,7 @@ public class UserService implements UserDetailsService {
          */
         log.info("Saving new user {} to the database",user.getEmail());
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new Exception();
+            throw new UserAlreadyExistException();
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
@@ -79,11 +87,31 @@ public class UserService implements UserDetailsService {
         return userRepository.findAll();
     }
 
-    public Collection<Product> addToCart(String email,String nameProduct){
+    @Transactional()
+    public Collection<ProductInPurchase> addToCart(String email,String nameProduct,String quantity){
+        int qty=Integer.parseInt(quantity);
         Product prod=productRepository.findByName(nameProduct);
+        if(prod==null)throw new ProductDoesNotExistException();
         Users user=userRepository.findByEmail(email);
-        user.getShoppingCart().add(prod);
+        if(user==null)throw new UserDoesNotExistException();
+        ProductInPurchase pip= productInPurchaseRepository.findByBuyerAndBuyed(user,prod);
+        if(pip==null){
+            if(qty>prod.getQuantity())throw new QuantityProductUnavailableException();
+            pip=new ProductInPurchase(null,user,prod,qty);
+            productInPurchaseRepository.save(pip);
+            user.getShoppingCart().add(pip);
+        }
+        else{
+            int total=pip.getQuantity()+qty;
+            if(total>prod.getQuantity())throw new QuantityProductUnavailableException();
+            pip.setQuantity(pip.getQuantity()+qty);
+        }
+
         return user.getShoppingCart();
+    }
+
+    public Collection<ProductInPurchase> getUserCart(String email){
+        return userRepository.findByEmail(email).getShoppingCart();
     }
 
 

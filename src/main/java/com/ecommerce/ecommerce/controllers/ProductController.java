@@ -83,6 +83,17 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
+    @PostMapping("/buyMyCart")
+    public ResponseEntity buyMyCart(HttpServletRequest request){
+        try{
+            String email=Support.tokenGetEmail(request);
+            productService.buyMyCart(email);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+    }
 
     @GetMapping("/getHotProduct")
     public ResponseEntity getHotProduct(@RequestParam boolean isHot){

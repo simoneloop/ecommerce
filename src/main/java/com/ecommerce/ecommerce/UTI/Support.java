@@ -35,12 +35,12 @@ public class Support {
 
     static {
         paymentMap.put("user",20.0);
-        paymentMap.put("email1",12.0);
+        paymentMap.put("email1",16.0);
         paymentMap.put("email2",100.0);
         paymentMap.put("email3",1.0);
     }
 
-    public boolean validateCreditLimit(String email,double paidAmount) throws Exception {
+    public boolean validateCreditLimit(String email,double paidAmount) throws RuntimeException {
         if(paidAmount>paymentMap.get(email)){
             throw new InsufficientAmountException();
         }

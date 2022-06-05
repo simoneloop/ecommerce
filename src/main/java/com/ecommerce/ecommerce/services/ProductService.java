@@ -1,12 +1,15 @@
 package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.UTI.Support;
+import com.ecommerce.ecommerce.UTI.exception.CartIsEmptyException;
 import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
 import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
 import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
 import com.ecommerce.ecommerce.entities.Product;
+import com.ecommerce.ecommerce.entities.ProductInPurchase;
 import com.ecommerce.ecommerce.entities.Purchase;
 import com.ecommerce.ecommerce.entities.Users;
+import com.ecommerce.ecommerce.repositories.ProductInPurchaseRepository;
 import com.ecommerce.ecommerce.repositories.ProductRepository;
 import com.ecommerce.ecommerce.repositories.PurchaseRepository;
 import com.ecommerce.ecommerce.repositories.UserRepository;
@@ -16,13 +19,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Pageable;
 import java.util.Collection;
-import java.util.Date;
 
 import static com.ecommerce.ecommerce.UTI.Consts.FIELD_SORT;
 import static com.ecommerce.ecommerce.UTI.Consts.PAGE_DIMENSION;
@@ -33,11 +32,15 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private PurchaseRepository purchaseRepository;
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
-    private PurchaseRepository purchaseRepository;
+    private ProductInPurchaseRepository productInPurchaseRepository;
 
     public Product addProduct(Product p){
         productRepository.save(p);
@@ -102,6 +105,34 @@ public class ProductService {
         Support.validateCreditLimit(email,amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
         p.setQuantity(newQuantity);
         productRepository.flush();
+    }
+
+    @Transactional()
+    public void buyProduct(Users user,String productName,int quantity) throws RuntimeException {
+
+        Product p= productRepository.findByName(productName);
+        if(p==null){
+            throw new ProductDoesNotExistException();
+        }
+        float amountToPay=p.getQuantity()*p.getPrice();
+        int newQuantity=p.getQuantity()-quantity;
+
+        if(newQuantity<0){
+            throw new QuantityProductUnavailableException();
+        }
+        Purchase purchase=new Purchase(null,null,user,p,quantity);
+        purchaseRepository.save(purchase);
+        Support.validateCreditLimit(user.getEmail(),amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
+        p.setQuantity(newQuantity);
+        productRepository.flush();
+    }
+
+    @Transactional()
+    public void buyMyCart(String email){
+        Users user=userRepository.findByEmail(email);
+        if(user==null)throw new UserDoesNotExistException();
+        if(user.getShoppingCart().size()==0)throw new CartIsEmptyException();
+        user.getShoppingCart().forEach(pip->buyProduct(user,pip.getBuyed().getName(),pip.getQuantity()));
     }
 
     public Collection<Product> getAllHotProducts(boolean isHot){

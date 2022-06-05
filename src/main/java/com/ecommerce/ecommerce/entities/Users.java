@@ -1,5 +1,6 @@
 package com.ecommerce.ecommerce.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -46,6 +47,8 @@ public class Users {
     @ManyToMany()
     private Collection<Role> roles=new ArrayList<>();
 
-    @ManyToMany()
-    private Collection<Product> shoppingCart=new ArrayList<>();
+    @ToString.Exclude
+    @JsonIgnore
+    @OneToMany(mappedBy = "buyer")
+    private List<ProductInPurchase> shoppingCart=new ArrayList<>();
 }
