@@ -1,10 +1,7 @@
 package com.ecommerce.ecommerce.services;
 
 import com.ecommerce.ecommerce.UTI.Support;
-import com.ecommerce.ecommerce.UTI.exception.CartIsEmptyException;
-import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
-import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
-import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
+import com.ecommerce.ecommerce.UTI.exception.*;
 import com.ecommerce.ecommerce.entities.Product;
 import com.ecommerce.ecommerce.entities.ProductInPurchase;
 import com.ecommerce.ecommerce.entities.Purchase;
@@ -43,17 +40,27 @@ public class ProductService {
     private ProductInPurchaseRepository productInPurchaseRepository;
 
     public Product addProduct(Product p){
+        if(productRepository.findByName(p.getName())!=null)throw new ProductAlreadyExistException();
         productRepository.save(p);
         return productRepository.save(p);
     }
 
-    //TODO versioning
-    public Product modifyProduct(Product p){
-        Product prod=productRepository.findByName(p.getName());
-        productRepository.delete(prod);
-        productRepository.flush();
-        return productRepository.save(p);
+
+    @Transactional()
+    public Product modifyProduct(Product p,String oldName){
+        Product prod=productRepository.findByName(oldName);
+        prod.setName(p.getName());
+        prod.setDescription(p.getDescription());
+        prod.setPrice(p.getPrice());
+        prod.setTypo(p.getTypo());
+        prod.setQuantity(p.getQuantity());
+        prod.setUrlPropic(p.getUrlPropic());
+        log.info(""+p.isHot());
+        prod.setHot(p.isHot());
+
+        return prod;
     }
+    @Transactional()
     public void deleteProduct(Product p){
         Product prod=productRepository.findByName(p.getName());
         productRepository.delete(prod);
@@ -124,6 +131,8 @@ public class ProductService {
         purchaseRepository.save(purchase);
         Support.validateCreditLimit(user.getEmail(),amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
         p.setQuantity(newQuantity);
+        ProductInPurchase pipTmp=productInPurchaseRepository.findByBuyerAndBuyed(user,p);
+        productInPurchaseRepository.delete(pipTmp);
         productRepository.flush();
     }
 

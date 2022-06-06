@@ -38,13 +38,13 @@ public class ProductController {
         }
     }
     @PostMapping("/modify")
-    public ResponseEntity modifyProduct(@RequestBody Product p){
+    public ResponseEntity modifyProduct(@RequestBody Product p,@RequestParam String oldName){
         try{
             if((int)p.getQuantity()==-1){
                 productService.deleteProduct(p);
                 return new ResponseEntity(HttpStatus.OK);
             }
-            return new ResponseEntity(productService.modifyProduct(p),HttpStatus.OK);
+            return new ResponseEntity(productService.modifyProduct(p,oldName),HttpStatus.OK);
         } catch (Exception exception) {
             exception.printStackTrace();
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);

@@ -13,6 +13,7 @@ import java.util.Collection;
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Integer> {
     Product findByName(String name);
+    Product findById(Long id);
     Collection<Product> findByTypo(String typo);
     Page<Product>findByTypo(String typo, PageRequest pageable);
     Collection<Product> findByHot(Boolean isHot);

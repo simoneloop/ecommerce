@@ -7,10 +7,7 @@ import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
 import com.ecommerce.ecommerce.controllers.UserController;
 import com.ecommerce.ecommerce.entities.*;
 import com.ecommerce.ecommerce.entities.UsersDTO;
-import com.ecommerce.ecommerce.repositories.ProductInPurchaseRepository;
-import com.ecommerce.ecommerce.repositories.ProductRepository;
-import com.ecommerce.ecommerce.repositories.RoleRepository;
-import com.ecommerce.ecommerce.repositories.UserRepository;
+import com.ecommerce.ecommerce.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.OAuth2Constants;
@@ -49,6 +46,9 @@ public class UserService implements UserDetailsService {
     private final ProductRepository productRepository;
     @Autowired
     private final ProductInPurchaseRepository productInPurchaseRepository;
+
+    @Autowired
+    private final PurchaseRepository purchaseRepository;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -159,6 +159,11 @@ public class UserService implements UserDetailsService {
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
         return new UsersDTO(user);
+    }
+
+    public Collection<Purchase> getMyOrders(String email){
+        Users user=userRepository.findByEmail(email);
+        return purchaseRepository.findByBuyer(user);
     }
 
 

@@ -1,6 +1,7 @@
 package com.ecommerce.ecommerce.controllers;
 
 
+import com.ecommerce.ecommerce.UTI.Support;
 import com.ecommerce.ecommerce.entities.Role;
 import com.ecommerce.ecommerce.entities.Users;
 import com.ecommerce.ecommerce.services.UserService;
@@ -25,8 +26,8 @@ public class RoleController {
         try{
             return new ResponseEntity(userService.saveRole(role), HttpStatus.OK);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        catch (Exception exception){
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
     @Data
@@ -41,8 +42,8 @@ public class RoleController {
             userService.addRoleToUser(rtu.getEmail(),rtu.getRoleName());
             return new ResponseEntity( HttpStatus.OK);
         }
-        catch (Exception e){
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+        catch (Exception exception){
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
 
