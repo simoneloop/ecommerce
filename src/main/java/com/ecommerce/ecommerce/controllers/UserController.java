@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ecommerce.ecommerce.UTI.Support;
 import com.ecommerce.ecommerce.entities.Users;
-import com.ecommerce.ecommerce.entities.UsersDTO;
+import com.ecommerce.ecommerce.DTOs.UsersDTO;
 import com.ecommerce.ecommerce.services.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
@@ -43,10 +43,11 @@ public class UserController {
     @PostMapping("/add")
     public ResponseEntity saveUser(@RequestBody Users users){
         try{
+            log.info(users.toString());
             return new ResponseEntity(userService.saveUser(users), HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity<>(e, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Support.getExceptionName(e), HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -124,7 +125,7 @@ public class UserController {
     }
 
     @PostMapping("/modifyMyDetails")
-    public ResponseEntity modifyMyDetails(HttpServletRequest request,@RequestBody UsersDTO details){
+    public ResponseEntity modifyMyDetails(HttpServletRequest request,@RequestBody Users details){
         try{
             String email=Support.tokenGetEmail(request);
             return new ResponseEntity(userService.modifyMyDetails(email,details),HttpStatus.OK);

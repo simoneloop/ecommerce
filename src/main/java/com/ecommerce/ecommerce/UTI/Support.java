@@ -63,9 +63,11 @@ public class Support {
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESHTOKEN_EXPIRES))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
+        String expires_in=TOKEN_EXPIRES.toString();
         Map<String, String> res = new HashMap<>();
         res.put("access_token", access_token);
         res.put("refresh_token", refresh_token);
+        res.put("expires_in", expires_in);
         return res;
     }
 
@@ -82,9 +84,11 @@ public class Support {
                 .withExpiresAt(new Date(System.currentTimeMillis() + REFRESHTOKEN_EXPIRES))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
+        String expires_in=TOKEN_EXPIRES.toString();
         Map<String, String> res = new HashMap<>();
         res.put("access_token", access_token);
         res.put("refresh_token", refresh_token);
+        res.put("expires_in", expires_in);
         return res;
     }
 
@@ -97,7 +101,7 @@ public class Support {
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             try {
                 String refresh_token = authorizationHeader.substring("Bearer ".length());//giusto rimuovo "Bearer" dal token
-                Algorithm algorithm = defineAlgorith();//TODO refactor
+                Algorithm algorithm = defineAlgorith();
                 JWTVerifier verifier = JWT.require(algorithm).build();
                 DecodedJWT decodedJWT = verifier.verify(refresh_token);
                 String email = decodedJWT.getSubject();

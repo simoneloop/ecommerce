@@ -105,4 +105,14 @@ public class ProductController {
         }
 
     }
+    @GetMapping("/getProduct")
+    public ResponseEntity getProduct(@RequestParam String name){
+        try{
+            return new ResponseEntity(productService.getProduct(name),HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+
+    }
 }

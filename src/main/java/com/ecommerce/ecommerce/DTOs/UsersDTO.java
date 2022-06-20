@@ -1,5 +1,6 @@
-package com.ecommerce.ecommerce.entities;
+package com.ecommerce.ecommerce.DTOs;
 
+import com.ecommerce.ecommerce.entities.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;

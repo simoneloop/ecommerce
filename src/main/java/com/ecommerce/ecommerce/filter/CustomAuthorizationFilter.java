@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -27,12 +28,14 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static com.ecommerce.ecommerce.UTI.Consts.*;
 import static com.ecommerce.ecommerce.UTI.Support.*;
 @Slf4j
+
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         //se inizia con login non filtrare
-        if(request.getServletPath().equals("/login")||request.getServletPath().equals("/users/refreshToken")){
+        if(request.getServletPath().equals("/login")||request.getServletPath().equals("/users/refreshToken")||request.getServletPath().equals("/users/add")){
+            log.info("salto auth");
             filterChain.doFilter(request,response);
         }
         //utilizziamo bearer token che permettono all'utente, una volta "trasportato" il token

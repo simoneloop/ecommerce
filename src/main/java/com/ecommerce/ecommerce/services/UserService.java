@@ -6,7 +6,7 @@ import com.ecommerce.ecommerce.UTI.exception.UserAlreadyExistException;
 import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
 import com.ecommerce.ecommerce.controllers.UserController;
 import com.ecommerce.ecommerce.entities.*;
-import com.ecommerce.ecommerce.entities.UsersDTO;
+import com.ecommerce.ecommerce.DTOs.UsersDTO;
 import com.ecommerce.ecommerce.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,15 +54,19 @@ public class UserService implements UserDetailsService {
 
 
 
-    public Users saveUser(Users user) throws Exception {
+    public Users saveUser(Users user) throws RuntimeException {
         /*
             TODO controlli su i dati inseriti
          */
-        log.info("Saving new user {} to the database",user.getEmail());
+
         if (userRepository.existsByEmail(user.getEmail())) {
             throw new UserAlreadyExistException();
         }
+        log.info("son qua");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        Role role=roleRepository.findByName("ROLE_USER");
+        user.getRoles().add(role);
+        log.info("Saving new user {} to the database",user.getEmail());
         return userRepository.save(user);
     }
 
@@ -143,7 +147,7 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
     }
 
-    public UsersDTO modifyMyDetails(String email, UsersDTO details){
+    public Users modifyMyDetails(String email, Users details){
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
         user.setFirstName(details.getFirstName());
@@ -152,13 +156,13 @@ public class UserService implements UserDetailsService {
         user.setPhoneNumber(details.getPhoneNumber());
         user.setAddress(details.getAddress());
         user.setUrlPropic(details.getUrlPropic());
-        return new UsersDTO(user);
+        return user;
     }
 
-    public UsersDTO getMyDetails(String email){
+    public Users getMyDetails(String email){
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
-        return new UsersDTO(user);
+        return user;
     }
 
     public Collection<Purchase> getMyOrders(String email){

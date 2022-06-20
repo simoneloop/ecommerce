@@ -68,13 +68,18 @@ public class ProductService {
     public Collection<Product> getAll(){
         return productRepository.findAll();
     }
-
+    public Product getProduct(String name) {
+        Product prod = productRepository.findByName(name);
+        if (prod != null) {
+            return prod;
+        }
+        throw new ProductDoesNotExistException();
+    }
     public Page<Product> getProductFilteredAndPageabled(String typo, String ordered,String page,String pageSize,String field){
         int nPage=page!=null?Integer.parseInt(page):0;
         int nDimension=pageSize!=null?Integer.parseInt(pageSize):PAGE_DIMENSION;
         PageRequest pageable;
         String f=field!=null?field:FIELD_SORT;
-        log.info("pageSize"+nDimension+"ciao");
         if(ordered!=null && ordered.equals("descending")){
             pageable= PageRequest.of(nPage,nDimension).withSort(Sort.by(Sort.Direction.DESC,f));
         }
@@ -97,8 +102,8 @@ public class ProductService {
         if(p==null){
             throw new ProductDoesNotExistException();
         }
-        float amountToPay=p.getQuantity()*p.getPrice();
-        int newQuantity=p.getQuantity()-Integer.parseInt(quantity);
+        float amountToPay=qty*p.getPrice();
+        int newQuantity=p.getQuantity()-qty;
 
         if(newQuantity<0){
             throw new QuantityProductUnavailableException();
@@ -121,7 +126,7 @@ public class ProductService {
         if(p==null){
             throw new ProductDoesNotExistException();
         }
-        float amountToPay=p.getQuantity()*p.getPrice();
+        float amountToPay=quantity*p.getPrice();
         int newQuantity=p.getQuantity()-quantity;
 
         if(newQuantity<0){
