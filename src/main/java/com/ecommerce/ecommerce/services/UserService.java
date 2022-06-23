@@ -113,6 +113,27 @@ public class UserService implements UserDetailsService {
         return user.getShoppingCart();
     }
 
+    public Collection<ProductInPurchase>setQuantityToCart(String email,String productName, String quantity){
+        int qty=Integer.parseInt(quantity);
+        Product prod=productRepository.findByName(productName);
+        if(prod==null)throw new ProductDoesNotExistException();
+        Users user=userRepository.findByEmail(email);
+        if(user==null)throw new UserDoesNotExistException();
+        ProductInPurchase pip= productInPurchaseRepository.findByBuyerAndBuyed(user,prod);
+        if(pip==null){
+            if(qty>prod.getQuantity())throw new QuantityProductUnavailableException();
+            pip=new ProductInPurchase(null,user,prod,qty);
+            productInPurchaseRepository.save(pip);
+            user.getShoppingCart().add(pip);
+        }
+        else{
+            if(qty>prod.getQuantity())throw new QuantityProductUnavailableException();
+            pip.setQuantity(qty);
+        }
+
+        return user.getShoppingCart();
+    }
+
     public Collection<ProductInPurchase> removeFromCart(String email,String nameProduct){
         Users user=userRepository.findByEmail(email);
         Product prod=productRepository.findByName(nameProduct);

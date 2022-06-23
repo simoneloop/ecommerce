@@ -100,6 +100,16 @@ public class UserController {
         }
 
     }
+    @PostMapping("/setQuantityToCart")
+    public ResponseEntity setQuantityToCart(HttpServletRequest request,@RequestParam String productName,@RequestParam String quantity){
+        try{
+            String email=Support.tokenGetEmail(request);
+            return new ResponseEntity(userService.setQuantityToCart(email,productName,quantity), HttpStatus.OK);
+        } catch (Exception exception) {
+            return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @PostMapping("/removeFromCart")
     public ResponseEntity removeFromCart(HttpServletRequest request,@RequestParam String productName){
