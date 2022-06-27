@@ -7,7 +7,11 @@ import com.ecommerce.ecommerce.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
+
 @Repository
 public interface ProductInPurchaseRepository extends JpaRepository<ProductInPurchase,Integer> {
     ProductInPurchase findByBuyerAndBuyed(Users u, Product p);
+
+    Collection<ProductInPurchase> findByBuyed(Product p);
 }

@@ -45,16 +45,19 @@ public class EcommerceApplication {
             userService.addRoleToUser("email1","ROLE_USER");
             userService.addRoleToUser("email2","ROLE_USER");
             userService.addRoleToUser("email3","ROLE_USER");*/
-            productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana",null,null,true));
-            productService.addProduct(new Product(null,"collanasfarzosa","una sfarzosa collana",4,(float)4,"collana",null,null,true));
-            productService.addProduct(new Product(null,"collanagraziosa","una graziosa collana",15,(float)5,"collana",null,null,true));
-            productService.addProduct(new Product(null,"bracciale gioioso","un gioioso bracciale",21,(float)3.5,"bracciale",null,null,true));
-            productService.addProduct(new Product(null,"bracciale sfarzoso","uno sfarzoso bracciale",21,(float)4.5,"bracciale",null,null,true));
-            productService.addProduct(new Product(null,"bracciale grazioso","un grazioso bracciale",21,(float)5.5,"bracciale",null,null,true));
-            productService.addProduct(new Product(null,"orecchino gioioso","un gioioso orecchino",21,(float)3.6,"orecchino",null,null,true));
-            productService.addProduct(new Product(null,"orecchino sfarzoso","uno sfarzoso orecchino",21,(float)4.6,"orecchino",null,null,true));
-            productService.addProduct(new Product(null,"orecchino grazioso","un grazioso orecchino",21,(float)5.6,"orecchino",null,null,true));
+            productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana","https://i.ibb.co/w6MwjbJ/collana-gioiosa.jpg",null,false,true));
+            productService.addProduct(new Product(null,"collanasfarzosa","una sfarzosa collana",4,(float)4,"collana","https://i.ibb.co/THT1bzq/collana-sfarzosa.jpg",null,false,true));
+            productService.addProduct(new Product(null,"collanagraziosa","una graziosa collana",15,(float)5,"collana","https://i.ibb.co/0f1pmdF/collana-graziosa.jpg",null,true,true));
+            productService.addProduct(new Product(null,"bracciale gioioso","un gioioso bracciale",21,(float)3.5,"bracciale","https://i.ibb.co/MyTZ2bM/bracciale-gioioso.jpg",null,true,true));
+            productService.addProduct(new Product(null,"bracciale sfarzoso","uno sfarzoso bracciale",21,(float)4.5,"bracciale","https://i.ibb.co/ydSbfLn/bracciale-sfarzoso.jpg",null,true,true));
+            productService.addProduct(new Product(null,"bracciale grazioso","un grazioso bracciale",21,(float)5.5,"bracciale","https://i.ibb.co/3prXJQ8/bracciale-grazioso.jpg",null,true,true));
+            productService.addProduct(new Product(null,"orecchino gioioso","un gioioso orecchino",21,(float)3.6,"orecchino","https://i.ibb.co/gSBCdYH/orecchino-gioioso.jpg",null,true,true));
+            productService.addProduct(new Product(null,"orecchino sfarzoso","uno sfarzoso orecchino",21,(float)4.6,"orecchino","https://i.ibb.co/NF2xphm/orecchino-sfarzoso.jpg",null,true,true));
+            productService.addProduct(new Product(null,"orecchino grazioso","un grazioso orecchino",21,(float)5.6,"orecchino","https://i.ibb.co/YRGMngS/orecchino-grazioso.jpg",null,true,true));
 
         };
     }
 }
+
+
+

@@ -10,4 +10,6 @@ import java.util.Collection;
 @Repository
 public interface PurchaseRepository extends JpaRepository<Purchase,Integer> {
     Collection<Purchase> findByBuyer(Users u);
+    Collection<Purchase> findByDone(boolean done);
+    Purchase findById(Long id);
 }

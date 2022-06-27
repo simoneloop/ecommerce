@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.ecommerce.ecommerce.UTI.Consts.FIELD_SORT;
 import static com.ecommerce.ecommerce.UTI.Consts.PAGE_DIMENSION;
@@ -40,7 +42,7 @@ public class ProductService {
     private ProductInPurchaseRepository productInPurchaseRepository;
 
     public Product addProduct(Product p){
-        if(productRepository.findByName(p.getName())!=null)throw new ProductAlreadyExistException();
+        if(productRepository.findByNameAndEnabled(p.getName(),true)!=null)throw new ProductAlreadyExistException();
         productRepository.save(p);
         return productRepository.save(p);
     }
@@ -48,7 +50,7 @@ public class ProductService {
 
     @Transactional()
     public Product modifyProduct(Product p,String oldName){
-        Product prod=productRepository.findByName(oldName);
+        Product prod=productRepository.findByNameAndEnabled(oldName,true);
         prod.setName(p.getName());
         prod.setDescription(p.getDescription());
         prod.setPrice(p.getPrice());
@@ -60,16 +62,11 @@ public class ProductService {
 
         return prod;
     }
-    @Transactional()
-    public void deleteProduct(Product p){
-        Product prod=productRepository.findByName(p.getName());
-        productRepository.delete(prod);
-    }
     public Collection<Product> getAll(){
-        return productRepository.findAll();
+        return productRepository.findByEnabled(true);
     }
     public Product getProduct(String name) {
-        Product prod = productRepository.findByName(name);
+        Product prod = productRepository.findByNameAndEnabled(name,true);
         if (prod != null) {
             return prod;
         }
@@ -88,7 +85,7 @@ public class ProductService {
         }
         Page<Product> products;
         if(typo!=null){
-            products =productRepository.findByTypo(typo,pageable);
+            products =productRepository.findByTypoAndEnabled(typo,pageable,true);
         }
         else{
             products =productRepository.findAll(pageable);
@@ -98,7 +95,7 @@ public class ProductService {
     @Transactional()//basta lanciare una RuntimeException e triggera il rollback
     public void buyProduct(String email,String productName,String quantity) throws Exception {
         int qty=Integer.parseInt(quantity);
-        Product p= productRepository.findByName(productName);
+        Product p= productRepository.findByNameAndEnabled(productName,true);
         if(p==null){
             throw new ProductDoesNotExistException();
         }
@@ -112,29 +109,36 @@ public class ProductService {
         if(user==null){
             throw new UserDoesNotExistException();
         }
-        Purchase purchase=new Purchase(null,null,user,p,qty);
+        Purchase purchase=new Purchase(null,null,user,p,qty,false);
         purchaseRepository.save(purchase);
         Support.validateCreditLimit(email,amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
         p.setQuantity(newQuantity);
         productRepository.flush();
     }
+    public void modifyHotProduct(Map<String,Boolean> map){
+        map.forEach((k,v)->{
+            Product prod=productRepository.findByNameAndEnabled(k,true);
+            prod.setHot(v);
+        });
+        productRepository.flush();
+
+    }
 
     @Transactional()
     public void buyProduct(Users user,String productName,int quantity) throws RuntimeException {
 
-        Product p= productRepository.findByName(productName);
+        Product p= productRepository.findByNameAndEnabled(productName,true);
         if(p==null){
             throw new ProductDoesNotExistException();
         }
-        float amountToPay=quantity*p.getPrice();
         int newQuantity=p.getQuantity()-quantity;
 
         if(newQuantity<0){
             throw new QuantityProductUnavailableException();
         }
-        Purchase purchase=new Purchase(null,null,user,p,quantity);
+        Purchase purchase=new Purchase(null,null,user,p,quantity,false);
         purchaseRepository.save(purchase);
-        Support.validateCreditLimit(user.getEmail(),amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
+
         p.setQuantity(newQuantity);
         ProductInPurchase pipTmp=productInPurchaseRepository.findByBuyerAndBuyed(user,p);
         productInPurchaseRepository.delete(pipTmp);
@@ -146,10 +150,22 @@ public class ProductService {
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
         if(user.getShoppingCart().size()==0)throw new CartIsEmptyException();
+        AtomicReference<Float> amountToPay= new AtomicReference<>(0.0F);
+        user.getShoppingCart().forEach(pip-> amountToPay.updateAndGet(v -> new Float((float) (v + pip.getQuantity() * pip.getBuyed().getPrice()))));
+        Support.validateCreditLimit(user.getEmail(),amountToPay.get());//DA SOSTITUIRE CON IL PAGAMENTO
         user.getShoppingCart().forEach(pip->buyProduct(user,pip.getBuyed().getName(),pip.getQuantity()));
+    }
+    public void deleteProducts(Collection<String>products){
+        products.forEach(p->{
+            Product prod=productRepository.findByNameAndEnabled(p,true);
+            prod.setEnabled(false);
+            productRepository.flush();
+
+        });
+
     }
 
     public Collection<Product> getAllHotProducts(boolean isHot){
-        return productRepository.findByHot(isHot);
+        return productRepository.findByHotAndEnabled(isHot,true);
     }
 }

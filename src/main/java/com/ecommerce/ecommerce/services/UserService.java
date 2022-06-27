@@ -22,6 +22,7 @@ import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -93,7 +94,7 @@ public class UserService implements UserDetailsService {
     @Transactional()
     public Collection<ProductInPurchase> addToCart(String email,String nameProduct,String quantity){
         int qty=Integer.parseInt(quantity);
-        Product prod=productRepository.findByName(nameProduct);
+        Product prod=productRepository.findByNameAndEnabled(nameProduct,true);
         if(prod==null)throw new ProductDoesNotExistException();
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
@@ -115,7 +116,7 @@ public class UserService implements UserDetailsService {
 
     public Collection<ProductInPurchase>setQuantityToCart(String email,String productName, String quantity){
         int qty=Integer.parseInt(quantity);
-        Product prod=productRepository.findByName(productName);
+        Product prod=productRepository.findByNameAndEnabled(productName,true);
         if(prod==null)throw new ProductDoesNotExistException();
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
@@ -127,7 +128,7 @@ public class UserService implements UserDetailsService {
             user.getShoppingCart().add(pip);
         }
         else{
-            if(qty>prod.getQuantity())throw new QuantityProductUnavailableException();
+            if(qty>prod.getQuantity() && qty>pip.getQuantity())throw new QuantityProductUnavailableException();
             pip.setQuantity(qty);
         }
 
@@ -144,7 +145,10 @@ public class UserService implements UserDetailsService {
     }
 
     public Collection<ProductInPurchase> getUserCart(String email){
-        return userRepository.findByEmail(email).getShoppingCart();
+        Users u=userRepository.findByEmail(email);
+        List<ProductInPurchase> cart=u.getShoppingCart();
+        Collections.sort(cart);
+        return cart;
     }
 
 

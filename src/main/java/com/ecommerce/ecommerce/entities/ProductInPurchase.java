@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -15,7 +17,7 @@ import java.util.Date;
 @Table(name = "product_in_purchase")
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductInPurchase {
+public class ProductInPurchase implements Comparable<ProductInPurchase> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
@@ -25,7 +27,8 @@ public class ProductInPurchase {
     @JoinColumn(name="buyer")
     private Users buyer;
 
-    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne()
     @JoinColumn(name="buyed")
     private Product buyed;
 
@@ -33,4 +36,8 @@ public class ProductInPurchase {
     private int quantity;
 
 
+    @Override
+    public int compareTo(ProductInPurchase o) {
+        return  buyed.getName().compareTo(o.getBuyed().getName());
+    }
 }

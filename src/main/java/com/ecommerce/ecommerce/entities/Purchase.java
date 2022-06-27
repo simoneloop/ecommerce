@@ -37,5 +37,9 @@ public class Purchase {
     @Column(name="quantity")
     private int quantity;
 
+    @Column(name="done")
+    private boolean done;
+
+
 
 }

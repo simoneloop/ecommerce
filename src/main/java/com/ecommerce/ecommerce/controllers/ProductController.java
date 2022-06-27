@@ -9,10 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -40,11 +44,29 @@ public class ProductController {
     @PostMapping("/modify")
     public ResponseEntity modifyProduct(@RequestBody Product p,@RequestParam String oldName){
         try{
-            if((int)p.getQuantity()==-1){
-                productService.deleteProduct(p);
-                return new ResponseEntity(HttpStatus.OK);
-            }
             return new ResponseEntity(productService.modifyProduct(p,oldName),HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/modifyHots")
+    public ResponseEntity modifyHotProduct(@RequestBody Map<String,Boolean> map){
+        try{
+            productService.modifyHotProduct(map);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
+        }
+    }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PostMapping("/deleteProducts")
+    public ResponseEntity deleteProducts(@RequestBody Collection<String> products){
+        try{
+            productService.deleteProducts(products);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception exception) {
             exception.printStackTrace();
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);

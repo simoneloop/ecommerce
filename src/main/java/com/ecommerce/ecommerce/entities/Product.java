@@ -51,5 +51,8 @@ public class Product {
     @Column(name="hot",nullable = false)
     private boolean hot;
 
+    @Column(name="enabled",nullable = false)
+    private boolean enabled;
+
 
 }
