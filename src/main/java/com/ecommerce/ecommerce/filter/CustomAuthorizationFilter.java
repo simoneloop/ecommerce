@@ -70,7 +70,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
                 }
             }
             else{
-                log.info("error logging in:no cazzo");
                 filterChain.doFilter(request,response);
             }
         }

@@ -20,6 +20,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer> {
     Page<Product>findByTypoAndEnabled(String typo, PageRequest pageable,boolean enabled);
     Collection<Product> findByHotAndEnabled(Boolean isHot,boolean enabled);
     Collection<Product> findByEnabled(boolean enabled);
+    Page<Product> findByEnabled(boolean enabled,PageRequest pageable);
 
 
 }

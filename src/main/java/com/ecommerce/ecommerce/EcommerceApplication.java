@@ -26,6 +26,9 @@ public class EcommerceApplication {
         return new BCryptPasswordEncoder();
     }
 
+
+
+
     @Bean
     CommandLineRunner run(UserService userService, ProductService productService){
         return args -> {
@@ -45,7 +48,7 @@ public class EcommerceApplication {
             userService.addRoleToUser("email1","ROLE_USER");
             userService.addRoleToUser("email2","ROLE_USER");
             userService.addRoleToUser("email3","ROLE_USER");*/
-            productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana","https://i.ibb.co/w6MwjbJ/collana-gioiosa.jpg",null,false,true));
+            /*productService.addProduct(new Product(null,"collanagioiosa","una gioiosa collana",2,(float)3,"collana","https://i.ibb.co/w6MwjbJ/collana-gioiosa.jpg",null,false,true));
             productService.addProduct(new Product(null,"collanasfarzosa","una sfarzosa collana",4,(float)4,"collana","https://i.ibb.co/THT1bzq/collana-sfarzosa.jpg",null,false,true));
             productService.addProduct(new Product(null,"collanagraziosa","una graziosa collana",15,(float)5,"collana","https://i.ibb.co/0f1pmdF/collana-graziosa.jpg",null,true,true));
             productService.addProduct(new Product(null,"bracciale gioioso","un gioioso bracciale",21,(float)3.5,"bracciale","https://i.ibb.co/MyTZ2bM/bracciale-gioioso.jpg",null,true,true));
@@ -54,6 +57,19 @@ public class EcommerceApplication {
             productService.addProduct(new Product(null,"orecchino gioioso","un gioioso orecchino",21,(float)3.6,"orecchino","https://i.ibb.co/gSBCdYH/orecchino-gioioso.jpg",null,true,true));
             productService.addProduct(new Product(null,"orecchino sfarzoso","uno sfarzoso orecchino",21,(float)4.6,"orecchino","https://i.ibb.co/NF2xphm/orecchino-sfarzoso.jpg",null,true,true));
             productService.addProduct(new Product(null,"orecchino grazioso","un grazioso orecchino",21,(float)5.6,"orecchino","https://i.ibb.co/YRGMngS/orecchino-grazioso.jpg",null,true,true));
+*/
+            productService.addProduct(new Product(null,"Digivice","Si narra trasportasse in altri mondi, ma sembra solo essere un pezzo di plastica",2,(float)3,"utilita","https://i.ibb.co/pKqpTjP/digi.jpg",null,false,true));
+            productService.addProduct(new Product(null,"Goku","Una statuetta raffigurante un antico guerriero",4,(float)4,"estetica","https://i.ibb.co/5Rt4XWy/goku.jpg",null,false,true));
+            productService.addProduct(new Product(null,"Jack","Un portachiavi fortunato, forse",15,(float)5,"utilita","https://i.ibb.co/KX8M8s3/jack.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Keyblade","Sembra essere una chiave, ma non apre nessuna porta",21,(float)3.5,"estetica","https://i.ibb.co/xSSY8HG/keyblade.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Mudkip culturista","Ad alcuni piace mettersi in mostra",21,(float)4.5,"estetica","https://i.ibb.co/m9L9HRz/marble.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Antico meccanismo 1","Per essere utilizzabile dovrebbe essere pieno almeno al 70%",21,(float)5.5,"speciale","https://i.ibb.co/CnYb8cQ/meccanismo1.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Antico meccanismo 2","Molto semplice e affidabile meglio del suo predecessore",21,(float)3.6,"utilità","https://i.ibb.co/ZxZbczd/meccanismo2.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Medaglione con lupo","Un grosso medaglione raffigurante la testa di un lupo, abbastanza ingombrante",21,(float)4.6,"estetica","https://i.ibb.co/T0qbg9L/medaglione.jpg",null,true,true));
+            productService.addProduct(new Product(null,"Rotocoso","Da qualche parte nel mondo uno sta ancora girando",21,(float)5.6,"speciale","https://i.ibb.co/GsYjVfR/rotocoso.jpg",null,true,true));
+
+
+
 
         };
     }

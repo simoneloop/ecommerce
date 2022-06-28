@@ -88,7 +88,7 @@ public class ProductService {
             products =productRepository.findByTypoAndEnabled(typo,pageable,true);
         }
         else{
-            products =productRepository.findAll(pageable);
+            products =productRepository.findByEnabled(true,pageable);
         }
         return products;
     }
