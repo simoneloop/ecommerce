@@ -42,7 +42,9 @@ public class ProductService {
     private ProductInPurchaseRepository productInPurchaseRepository;
 
     public Product addProduct(Product p){
-        if(productRepository.findByNameAndEnabled(p.getName(),true)!=null)throw new ProductAlreadyExistException();
+        if(productRepository.findByNameIgnoreCaseAndEnabled(p.getName(),true)!=null)throw new ProductAlreadyExistException();
+        if(p.getPrice()<=0)throw new PriceUnavailableException();
+        if(p.getQuantity()<0)throw new QuantityProductUnavailableException();
         productRepository.save(p);
         return productRepository.save(p);
     }
@@ -50,7 +52,7 @@ public class ProductService {
 
     @Transactional()
     public Product modifyProduct(Product p,String oldName){
-        Product prod=productRepository.findByNameAndEnabled(oldName,true);
+        Product prod=productRepository.findByNameIgnoreCaseAndEnabled(oldName,true);
         prod.setName(p.getName());
         prod.setDescription(p.getDescription());
         prod.setPrice(p.getPrice());
@@ -66,7 +68,7 @@ public class ProductService {
         return productRepository.findByEnabled(true);
     }
     public Product getProduct(String name) {
-        Product prod = productRepository.findByNameAndEnabled(name,true);
+        Product prod = productRepository.findByNameIgnoreCaseAndEnabled(name,true);
         if (prod != null) {
             return prod;
         }
@@ -95,7 +97,7 @@ public class ProductService {
     @Transactional()//basta lanciare una RuntimeException e triggera il rollback
     public void buyProduct(String email,String productName,String quantity) throws Exception {
         int qty=Integer.parseInt(quantity);
-        Product p= productRepository.findByNameAndEnabled(productName,true);
+        Product p= productRepository.findByNameIgnoreCaseAndEnabled(productName,true);
         if(p==null){
             throw new ProductDoesNotExistException();
         }
@@ -117,7 +119,7 @@ public class ProductService {
     }
     public void modifyHotProduct(Map<String,Boolean> map){
         map.forEach((k,v)->{
-            Product prod=productRepository.findByNameAndEnabled(k,true);
+            Product prod=productRepository.findByNameIgnoreCaseAndEnabled(k,true);
             prod.setHot(v);
         });
         productRepository.flush();
@@ -127,7 +129,7 @@ public class ProductService {
     @Transactional()
     public void buyProduct(Users user,String productName,int quantity) throws RuntimeException {
 
-        Product p= productRepository.findByNameAndEnabled(productName,true);
+        Product p= productRepository.findByNameIgnoreCaseAndEnabled(productName,true);
         if(p==null){
             throw new ProductDoesNotExistException();
         }
@@ -157,7 +159,7 @@ public class ProductService {
     }
     public void deleteProducts(Collection<String>products){
         products.forEach(p->{
-            Product prod=productRepository.findByNameAndEnabled(p,true);
+            Product prod=productRepository.findByNameIgnoreCaseAndEnabled(p,true);
             prod.setEnabled(false);
             productRepository.flush();
 

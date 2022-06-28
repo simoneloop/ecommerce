@@ -4,25 +4,11 @@ import com.ecommerce.ecommerce.UTI.exception.ProductDoesNotExistException;
 import com.ecommerce.ecommerce.UTI.exception.QuantityProductUnavailableException;
 import com.ecommerce.ecommerce.UTI.exception.UserAlreadyExistException;
 import com.ecommerce.ecommerce.UTI.exception.UserDoesNotExistException;
-import com.ecommerce.ecommerce.controllers.UserController;
 import com.ecommerce.ecommerce.entities.*;
-import com.ecommerce.ecommerce.DTOs.UsersDTO;
 import com.ecommerce.ecommerce.repositories.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.keycloak.OAuth2Constants;
-import org.keycloak.admin.client.CreatedResponseUtil;
-import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.KeycloakBuilder;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UserResource;
-import org.keycloak.admin.client.resource.UsersResource;
-import org.keycloak.representations.idm.CredentialRepresentation;
-import org.keycloak.representations.idm.RoleRepresentation;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import javax.ws.rs.core.Response;
 import java.util.*;
 
 @Service @RequiredArgsConstructor @Transactional @Slf4j
@@ -94,7 +79,7 @@ public class UserService implements UserDetailsService {
     @Transactional()
     public Collection<ProductInPurchase> addToCart(String email,String nameProduct,String quantity){
         int qty=Integer.parseInt(quantity);
-        Product prod=productRepository.findByNameAndEnabled(nameProduct,true);
+        Product prod=productRepository.findByNameIgnoreCaseAndEnabled(nameProduct,true);
         if(prod==null)throw new ProductDoesNotExistException();
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
@@ -116,7 +101,7 @@ public class UserService implements UserDetailsService {
 
     public Collection<ProductInPurchase>setQuantityToCart(String email,String productName, String quantity){
         int qty=Integer.parseInt(quantity);
-        Product prod=productRepository.findByNameAndEnabled(productName,true);
+        Product prod=productRepository.findByNameIgnoreCaseAndEnabled(productName,true);
         if(prod==null)throw new ProductDoesNotExistException();
         Users user=userRepository.findByEmail(email);
         if(user==null)throw new UserDoesNotExistException();
@@ -137,7 +122,7 @@ public class UserService implements UserDetailsService {
 
     public Collection<ProductInPurchase> removeFromCart(String email,String nameProduct){
         Users user=userRepository.findByEmail(email);
-        Product prod=productRepository.findByName(nameProduct);
+        Product prod=productRepository.findByNameIgnoreCase(nameProduct);
         ProductInPurchase pip=productInPurchaseRepository.findByBuyerAndBuyed(user,prod);
         if(pip==null)throw new ProductDoesNotExistException();
         productInPurchaseRepository.delete(pip);

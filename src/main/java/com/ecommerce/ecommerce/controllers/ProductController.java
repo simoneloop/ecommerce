@@ -41,6 +41,7 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
+
     @PostMapping("/modify")
     public ResponseEntity modifyProduct(@RequestBody Product p,@RequestParam String oldName){
         try{

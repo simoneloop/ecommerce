@@ -14,9 +14,9 @@ import java.util.Collection;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Integer> {
-    Product findByNameAndEnabled(String name,boolean enabled);
+    Product findByNameIgnoreCaseAndEnabled(String name, boolean enabled);
 
-    Product findByName(String name);
+    Product findByNameIgnoreCase(String name);
     Page<Product>findByTypoAndEnabled(String typo, PageRequest pageable,boolean enabled);
     Collection<Product> findByHotAndEnabled(Boolean isHot,boolean enabled);
     Collection<Product> findByEnabled(boolean enabled);
