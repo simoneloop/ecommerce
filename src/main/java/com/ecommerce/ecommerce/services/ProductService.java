@@ -111,7 +111,7 @@ public class ProductService {
         if(user==null){
             throw new UserDoesNotExistException();
         }
-        Purchase purchase=new Purchase(null,null,user,p,qty,false);
+        Purchase purchase=new Purchase(null,null,user,p,qty,p.getPrice(),false);
         purchaseRepository.save(purchase);
         Support.validateCreditLimit(email,amountToPay);//DA SOSTITUIRE CON IL PAGAMENTO
         p.setQuantity(newQuantity);
@@ -138,7 +138,7 @@ public class ProductService {
         if(newQuantity<0){
             throw new QuantityProductUnavailableException();
         }
-        Purchase purchase=new Purchase(null,null,user,p,quantity,false);
+        Purchase purchase=new Purchase(null,null,user,p,quantity,p.getPrice(),false);
         purchaseRepository.save(purchase);
 
         p.setQuantity(newQuantity);

@@ -44,18 +44,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/users/add","/users/refreshToken","/products/getHotProduct","/products/getProductPageable","/products/getProduct").permitAll();
-        http.authorizeRequests().antMatchers("/users/addToCart","/users/getUserCart","/users/removeFromCart","/users/setQuantityToCart","/users/getMyDetails","/users/modifyMyDetails").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers("/products/buy","/products/buyMyCart").hasAnyAuthority("ROLE_USER");
-        http.authorizeRequests().antMatchers("/purchase/getMyOrders").hasAnyAuthority("ROLE_USER");
-
-        /*http.authorizeRequests().antMatchers("/products/getHotProduct").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/products/getProductPageable").hasAnyAuthority("ROLE_USER","ROLE_ADMIN");*/
-        http.authorizeRequests().antMatchers("/role/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/users/**").hasAnyAuthority("ROLE_ADMIN");
-        http.authorizeRequests().antMatchers("/products/**").hasAnyAuthority("ROLE_ADMIN");
-
-        /*http.authorizeRequests().antMatchers(HttpMethod.GET,"/users/**").hasAnyAuthority("ROLE_ADMIN");*/
+        http.authorizeRequests().antMatchers("/users/**").permitAll();
+        http.authorizeRequests().antMatchers("/products/**").permitAll();
+        http.authorizeRequests().antMatchers("/purchase/**").permitAll();
+        http.authorizeRequests().antMatchers("/role/**").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -29,7 +29,7 @@ public class PurchaseController {
 
     @Autowired
     PurchaseService purchaseService;
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/getMyOrders")
     public ResponseEntity getMyOrders(HttpServletRequest request){
         try{

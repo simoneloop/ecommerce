@@ -31,6 +31,7 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/add")
     public ResponseEntity addProduct(@RequestBody Product p){
         try{
@@ -41,7 +42,7 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/modify")
     public ResponseEntity modifyProduct(@RequestBody Product p,@RequestParam String oldName){
         try{
@@ -73,6 +74,7 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity getAll(){
         try{
@@ -82,6 +84,7 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
+
     @GetMapping("/getProductPageable")
     public ResponseEntity getPageableProductFiltered(@RequestParam(required = false) String typo,@RequestParam(required = false) String ordered,@RequestParam(required = false) String page,@RequestParam(required = false) String pageSize,@RequestParam(required = false) String field){
         try{
@@ -92,7 +95,7 @@ public class ProductController {
         }
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/buy")
     public ResponseEntity buyProduct(HttpServletRequest request, @RequestParam String productName, @RequestParam String quantity){
         try{
@@ -106,6 +109,7 @@ public class ProductController {
             return new ResponseEntity(Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/buyMyCart")
     public ResponseEntity buyMyCart(HttpServletRequest request){
         try{
@@ -128,6 +132,7 @@ public class ProductController {
         }
 
     }
+
     @GetMapping("/getProduct")
     public ResponseEntity getProduct(@RequestParam String name){
         try{

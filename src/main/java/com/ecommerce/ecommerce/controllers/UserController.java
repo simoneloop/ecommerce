@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -52,7 +53,7 @@ public class UserController {
     }
 
 
-
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @GetMapping("/getAll")
     public ResponseEntity getAll(){
         return new ResponseEntity(userService.getUsers(), HttpStatus.OK);
@@ -90,6 +91,7 @@ public class UserController {
 
     }
 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/addToCart")
     public ResponseEntity addToCart(HttpServletRequest request,@RequestParam String productName,@RequestParam String quantity){
         try{
@@ -100,6 +102,7 @@ public class UserController {
         }
 
     }
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/setQuantityToCart")
     public ResponseEntity setQuantityToCart(HttpServletRequest request,@RequestParam String productName,@RequestParam String quantity){
         try{
@@ -110,7 +113,7 @@ public class UserController {
         }
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/removeFromCart")
     public ResponseEntity removeFromCart(HttpServletRequest request,@RequestParam String productName){
         try{
@@ -121,7 +124,7 @@ public class UserController {
         }
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/getUserCart")
     public ResponseEntity getUserCart(HttpServletRequest request){
         try{
@@ -133,7 +136,7 @@ public class UserController {
         }
 
     }
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @PostMapping("/modifyMyDetails")
     public ResponseEntity modifyMyDetails(HttpServletRequest request,@RequestBody Users details){
         try{
@@ -144,7 +147,7 @@ public class UserController {
             return new ResponseEntity( Support.getExceptionName(exception),HttpStatus.BAD_REQUEST);
         }
     }
-
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     @GetMapping("/getMyDetails")
     public ResponseEntity getMyDetails(HttpServletRequest request){
         try{

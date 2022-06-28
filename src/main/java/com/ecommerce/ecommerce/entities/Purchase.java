@@ -37,6 +37,9 @@ public class Purchase {
     @Column(name="quantity")
     private int quantity;
 
+    @Column(name="fixed_price")
+    private double fixed_price;
+
     @Column(name="done")
     private boolean done;
 
