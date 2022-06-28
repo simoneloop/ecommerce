@@ -36,14 +36,12 @@ public class EcommerceApplication {
             userService.saveRole(new Role(null,"ROLE_ADMIN"));
 
 
-            userService.saveUser(new Users(null,"simone","lopez","admin","3517204474","viagBruno5","admin","img1.png",new ArrayList<>(),new ArrayList<>()));
-            userService.saveUser(new Users(null,"simo","lop","user","mannaiaal numero","asd","user","asd.png",new ArrayList<>(),new ArrayList<>()));
-            userService.saveUser(new Users(null,"simo","lop","email1","numero1","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
-            userService.saveUser(new Users(null,"simo","lop","email2","numero2","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
-            userService.saveUser(new Users(null,"simo","lop","email3","numero3","asd","asd","asd.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"simone","lopez","admin@","3517204474","via capo di mondo 3","admin","img1.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"utente1","zero","user1@","3289205246","via capod di mare 5","user1","asd.png",new ArrayList<>(),new ArrayList<>()));
+            userService.saveUser(new Users(null,"utente2","uno","user2@","3247469610","via capo di cielo 7","user2","asd.png",new ArrayList<>(),new ArrayList<>()));
 
 
-            userService.addRoleToUser("admin","ROLE_ADMIN");
+            userService.addRoleToUser("admin@","ROLE_ADMIN");
             /*userService.addRoleToUser("user","ROLE_USER");
             userService.addRoleToUser("email1","ROLE_USER");
             userService.addRoleToUser("email2","ROLE_USER");

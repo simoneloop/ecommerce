@@ -34,10 +34,9 @@ public class Support {
     private Map<String,Double>paymentMap=new HashMap<>();
 
     static {
-        paymentMap.put("user",20.0);
-        paymentMap.put("email1",16.0);
-        paymentMap.put("email2",100.0);
-        paymentMap.put("email3",1.0);
+        paymentMap.put("user1@",20.0);
+        paymentMap.put("user2@",100.0);
+
     }
 
     public boolean validateCreditLimit(String email,double paidAmount) throws RuntimeException {
