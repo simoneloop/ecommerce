@@ -36,6 +36,7 @@ public class Support {
     static {
         paymentMap.put("user1@",20.0);
         paymentMap.put("user2@",100.0);
+        paymentMap.put("user3@",25.0);
 
     }
 
